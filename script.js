@@ -1,106 +1,127 @@
-// Navigation toggle for mobile
-const navSlide = () => {
-  const burger = document.querySelector(".burger")
-  const nav = document.querySelector(".nav-links")
-  const navLinks = document.querySelectorAll(".nav-links li")
+document.addEventListener("DOMContentLoaded", () => {
+  // Restore scroll position if available
+  const savedScrollPosition = localStorage.getItem("scrollPosition");
+  if (savedScrollPosition !== null) {
+    window.scrollTo(0, parseInt(savedScrollPosition));
+  }
+
+  // Initialize AOS (Animate On Scroll)
+  AOS.init({
+    duration: 350,
+    easing: "ease",
+    once: false,
+    mirror: false,
+  });
+
+  // Mobile Navigation
+  const burger = document.querySelector(".burger");
+  const nav = document.querySelector(".nav-links");
+  const navLinks = document.querySelectorAll(".nav-links li");
 
   burger.addEventListener("click", () => {
     // Toggle Nav
-    nav.classList.toggle("nav-active")
+    nav.classList.toggle("nav-active");
 
     // Animate Links
     navLinks.forEach((link, index) => {
       if (link.style.animation) {
-        link.style.animation = ""
+        link.style.animation = "";
       } else {
-        link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`
+        link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
       }
-    })
+    });
 
     // Burger Animation
-    burger.classList.toggle("toggle")
-  })
-}
+    burger.classList.toggle("toggle");
+  });
 
-// Smooth scrolling for navigation links
-const smoothScroll = () => {
-  const navLinks = document.querySelectorAll("header nav a")
-
+  // Close mobile menu when clicking on a link
   navLinks.forEach((link) => {
-    link.addEventListener("click", function (e) {
-      e.preventDefault()
+    link.addEventListener("click", () => {
+      nav.classList.remove("nav-active");
+      burger.classList.remove("toggle");
+      navLinks.forEach((link) => {
+        link.style.animation = "";
+      });
+    });
+  });
 
-      // Close mobile menu if open
-      const nav = document.querySelector(".nav-links")
-      const burger = document.querySelector(".burger")
-      if (nav.classList.contains("nav-active")) {
-        nav.classList.remove("nav-active")
-        burger.classList.remove("toggle")
-      }
+  const themeToggle = document.querySelector("#theme-toggle");
+  const htmlElement = document.documentElement;
+  const icon = themeToggle; // langsung!
 
-      // Scroll to section
-      const targetId = this.getAttribute("href")
-      const targetSection = document.querySelector(targetId)
+  // Cek saved theme
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme) {
+    htmlElement.classList.add(savedTheme);
+    updateIcon(savedTheme);
+  } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    htmlElement.classList.add("dark");
+    localStorage.setItem("theme", "dark");
+    updateIcon("dark");
+  }
 
-      window.scrollTo({
-        top: targetSection.offsetTop - 80,
-        behavior: "smooth",
-      })
-    })
-  })
-}
-
-
-// Header scroll effect
-const headerScroll = () => {
-  const header = document.querySelector("header")
-  const nav_link = document.querySelectorAll('.nav-link')
-
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 100) {
-      header.style.padding = "20px 0"
-      header.style.boxShadow = "0 5px 15px rgba(0, 0, 0, 0.1)"
+  // Event klik untuk toggle tema
+  themeToggle.addEventListener("click", () => {
+    if (htmlElement.classList.contains("dark")) {
+      htmlElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      updateIcon("light");
     } else {
-      header.style.padding = "20px 0"
-      header.style.boxShadow = "0 5px 15px rgba(0, 0, 0, 0.1)"
+      htmlElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      updateIcon("dark");
     }
-  })
-}
 
-// Active section highlight in navigation
-const activeNavLink = () => {
-  const sections = document.querySelectorAll("section")
-  const navLinks = document.querySelectorAll("header nav a")
-
-  window.addEventListener("scroll", () => {
-    let current = ""
-
-    sections.forEach((section) => {
-      const sectionTop = section.offsetTop
-      const sectionHeight = section.clientHeight
-
-      if (pageYOffset >= sectionTop - 200) {
-        current = section.getAttribute("id")
+    // Refresh AOS after theme change
+    setTimeout(() => {
+      if (typeof AOS !== "undefined") {
+        AOS.refresh();
       }
-    })
+    }, 300);
+  });
 
-    navLinks.forEach((link) => {
-      link.classList.remove("active")
-      if (link.getAttribute("href").substring(1) === current) {
-        link.classList.add("active")
+  // Update icon Sun ↔ Moon
+  function updateIcon(theme) {
+    if (theme === "dark") {
+      icon.classList.remove("fa-sun");
+      icon.classList.add("fa-moon");
+    } else {
+      icon.classList.remove("fa-moon");
+      icon.classList.add("fa-sun");
+    }
+  }
+
+  // Refresh AOS on window resize
+  window.addEventListener("resize", () => {
+    if (typeof AOS !== "undefined") {
+      AOS.refresh();
+    }
+  });
+
+  // Smooth scrolling for navigation links
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const targetId = this.getAttribute("href");
+      const targetElement = document.querySelector(targetId);
+
+      if (targetElement) {
+        const headerOffset = 80;
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
       }
-    })
-  })
-}
+    });
+  });
+});
 
-// Initialize all functions
-const app = () => {
-  navSlide()
-  smoothScroll()
-  formValidation()
-  headerScroll()
-  activeNavLink()
-}
-
-// Run when DOM is fully loaded
-document.addEventListener("DOMContentLoaded", app)
+// Save scroll position before page unload
+window.addEventListener("beforeunload", () => {
+  localStorage.setItem("scrollPosition", window.scrollY);
+});

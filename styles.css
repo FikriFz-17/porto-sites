@@ -8,6 +8,24 @@
   --danger-color: #dc3545;
   --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease;
+
+  --bg-color: #f8f9fa;
+  --text-color: #212529;
+  --card-bg: #ffffff;
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --footer-bg: #212529;
+  --footer-text: #ffffff;
+}
+
+.dark {
+  --primary-color: #6d8cff;
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  --card-bg: #1e1e1e;
+  --header-bg: rgba(30, 30, 30, 0.95);
+  --footer-bg: #0a0a0a;
+  --footer-text: #e0e0e0;
+  --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
 * {
@@ -23,13 +41,14 @@ html {
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-  color: var(--dark-color);
-  background-color: var(--light-color);
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {
   text-decoration: none;
-  color: var(--dark-color);
+  color: var(--text-color);
 }
 
 ul {
@@ -123,7 +142,7 @@ header {
   justify-content: space-between;
   align-items: center;
   z-index: 1000;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: var(--header-bg);
   box-shadow: var(--box-shadow);
   transition: var(--transition);
 }
@@ -153,6 +172,21 @@ header {
   color: var(--primary-color);
 }
 
+/* Theme toggle */
+#theme-toggle {
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  color: var(--text-color);
+  margin-top: 2.2px;
+  transition: all 0.5s ease;
+}
+
+#theme-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: rotate(20deg);
+}
+
 .burger {
   display: none;
   cursor: pointer;
@@ -162,8 +196,8 @@ header {
 .burger div {
   width: 25px;
   height: 3px;
-  background-color: var(--dark-color);
-  margin: 5px;
+  background-color: var(--text-color);
+  margin: 5px 20px;
   transition: var(--transition);
 }
 
@@ -188,6 +222,7 @@ header {
   font-size: 2rem;
   color: var(--secondary-color);
   margin-bottom: 20px;
+  min-height: 30px;
 }
 
 .intro-text p {
@@ -225,14 +260,14 @@ header {
 /* Study Section */
 #study {
   padding: 60px 0;
-  background-color: #f9f9f9;
+  background-color: var(--bg-color);
 }
 
 .section-title {
   text-align: center;
   font-size: 2rem;
   margin-bottom: 40px;
-  color: #3f3f3f;
+  color: var(--text-color);
   font-weight: 700;
 }
 
@@ -245,10 +280,10 @@ header {
 
 /* Card styling */
 .education-card {
-  background-color: white;
+  background-color: var(--card-bg);
   border-radius: 12px;
   padding: 25px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--box-shadow);
   transition: transform 0.3s ease;
 }
 
@@ -259,28 +294,28 @@ header {
 /* Header */
 .education-header h3 {
   font-size: 1.2rem;
-  color: #3742fa;
+  color: var(--primary-color);
   font-weight: 600;
   margin-bottom: 5px;
 }
 
 .education-header h4 {
   font-size: 1rem;
-  color: #555;
+  color: var(--secondary-color);
   margin-bottom: 10px;
   font-weight: 500;
 }
 
 .education-date {
   font-size: 0.9rem;
-  color: #888;
+  color: var(--secondary-color);
   margin-bottom: 10px;
 }
 
 /* Details */
 .education-details p {
   font-size: 0.95rem;
-  color: #333;
+  color: var(--text-color);
   line-height: 1.6;
   text-align: justify;
 }
@@ -294,7 +329,7 @@ header {
 }
 
 .project-card {
-  background-color: white;
+  background-color: var(--card-bg);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: var(--box-shadow);
@@ -306,9 +341,7 @@ header {
 
 .project-card img {
   width: 100%;
-
   object-fit: cover;
-  border-bottom: 1px solid #eee; /* opsional buat pemisah */
 }
 
 .project-card:hover {
@@ -329,7 +362,7 @@ header {
 
 .project-info p {
   margin-bottom: auto; /* biar p dorong icon ke bawah */
-  color: var(--secondary-color);
+  color: var(--text-color);
   text-align: justify;
   line-height: 1.2;
   letter-spacing: normal;
@@ -394,7 +427,7 @@ header {
 
 /* Card skill item */
 .skill-item {
-  background-color: white;
+  background-color: var(--card-bg);
   padding: 20px;
   border-radius: 10px;
   box-shadow: var(--box-shadow);
@@ -417,8 +450,8 @@ header {
 
 /* Footer */
 footer {
-  background-color: var(--dark-color);
-  color: white;
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
   text-align: center;
   padding: 20px 0;
 }
@@ -474,8 +507,8 @@ footer {
     right: 0;
     top: 0;
     height: auto; /* Changed from 100vh to auto */
-    max-height: 300px; /* Set a maximum height */
-    background-color: white;
+    max-height: 350px; /* Set a maximum height */
+    background-color: var(--card-bg);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -542,6 +575,10 @@ footer {
 
   .skills-grid {
     grid-template-columns: 1fr;
+  }
+
+  .theme-toggle {
+    margin-right: 10px;
   }
 }
 
