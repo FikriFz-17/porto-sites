@@ -344,6 +344,10 @@ header {
   object-fit: cover;
 }
 
+.portait{
+  height: 266px;
+}
+
 .project-card:hover {
   transform: translateY(-10px);
 }
